@@ -1,39 +1,39 @@
 defmodule S001 do
     def solve() do
-        {:ok, body} = File.read "001.txt"
-        frequencyChanges = Enum.map(String.split(body), fn(x) -> String.to_integer(x) end)
-        frequency = solveFirstPart(frequencyChanges)
-        firstDuplicate = solveSecondPart(frequencyChanges)
-        IO.puts "#1 The resulting frequency is: #{frequency}"
-        IO.puts "#2 The first frequency reached twice: #{firstDuplicate}"
+        case File.read "001.txt" do
+            {:ok, body} ->
+                frequencyChanges = body
+                |> String.split()
+                |> Enum.map(&String.to_integer/1)
+                
+                IO.puts "1st solution: #{solveFirstPart(frequencyChanges)}"
+                IO.puts "2nd solution: #{solveSecondPart(frequencyChanges)}"
+            {:error, _} ->IO.puts "Error opening file"
+        end
     end
 
     defp solveFirstPart(frequencyChanges) do
-        Enum.reduce(frequencyChanges, fn(x, acc) -> x + acc end)
+        Enum.sum(frequencyChanges)
     end
 
     defp solveSecondPart(frequencyChanges) do
         startWith = 0
-        findFirstDup(startWith, frequencyChanges)
+        findFirstDup(frequencyChanges, startWith)
     end
 
-    defp findFirstDup(startWith, frequencyChanges) do
+    defp findFirstDup(frequencyChanges, startWith) do
         cache = MapSet.new()
-        findFirstDup(startWith, frequencyChanges, cache)
+        findFirstDup(frequencyChanges, startWith, cache)
     end
 
-    defp findFirstDup(acc, list, cache) do
+    defp findFirstDup(list, acc, cache) do
         [next | _] = list
         acc = acc + next
         if MapSet.member?(cache, acc) do
             acc
         else
-            findFirstDup(acc, rotate(list), MapSet.put(cache, acc))
+            findFirstDup(rotate(list), acc, MapSet.put(cache, acc))
         end
-    end
-
-    defp rotate(list) when list == [] do
-        []
     end
 
     defp rotate([head | tail]) do
