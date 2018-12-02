@@ -8,7 +8,7 @@ defmodule S001 do
                 
                 IO.puts "1st solution: #{solveFirstPart(frequencyChanges)}"
                 IO.puts "2nd solution: #{solveSecondPart(frequencyChanges)}"
-            {:error, _} ->IO.puts "Error opening file"
+            {:error, _} ->IO.puts "Error opening file 001.txt"
         end
     end
 
