@@ -1,13 +1,9 @@
 defmodule Day2 do
-    def solve() do
-        case File.read "day2.txt" do
-            {:ok, body} ->
-                ids = body |> String.split()
-                
-                IO.puts "1st solution: #{solve_first_part(ids)}"
-                IO.puts "2nd solution: #{solve_second_part(ids)}"
-            {:error, _} ->IO.puts "Error opening file 002.txt"
-        end
+    def solve(input) do
+        ids = input |> String.split()
+        
+        IO.puts "1st solution: #{solve_first_part(ids)}"
+        IO.puts "2nd solution: #{solve_second_part(ids)}"
     end
 
     def solve_first_part(ids) do
@@ -97,4 +93,5 @@ defmodule Day2 do
     end
 end
 
-Day2.solve()
+Code.require_file("common.ex")
+Common.solve("day2.txt", &Day2.solve/1)

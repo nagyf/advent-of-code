@@ -1,15 +1,9 @@
 defmodule Day1 do
-    def solve() do
-        case File.read "day1.txt" do
-            {:ok, body} ->
-                frequencyChanges = body
-                |> String.split()
-                |> Enum.map(&String.to_integer/1)
-                
-                IO.puts "1st solution: #{solveFirstPart(frequencyChanges)}"
-                IO.puts "2nd solution: #{solveSecondPart(frequencyChanges)}"
-            {:error, _} ->IO.puts "Error opening file 001.txt"
-        end
+    def solve(input) do
+        frequencyChanges = String.split(input) |> Enum.map(&String.to_integer/1)
+        
+        IO.puts "1st solution: #{solveFirstPart(frequencyChanges)}"
+        IO.puts "2nd solution: #{solveSecondPart(frequencyChanges)}"
     end
 
     defp solveFirstPart(frequencyChanges) do
@@ -41,4 +35,5 @@ defmodule Day1 do
     end
 end
 
-Day1.solve()
+Code.require_file("common.ex")
+Common.solve("day1.txt", &Day1.solve/1)
