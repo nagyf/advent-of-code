@@ -1,6 +1,6 @@
-defmodule S001 do
+defmodule Day1 do
     def solve() do
-        case File.read "001.txt" do
+        case File.read "day1.txt" do
             {:ok, body} ->
                 frequencyChanges = body
                 |> String.split()
@@ -41,4 +41,4 @@ defmodule S001 do
     end
 end
 
-S001.solve()
+Day1.solve()
