@@ -30,17 +30,41 @@ defmodule Day3 do
     end
 
     defp solveFirstPart(fabrics) do
-        claims = Enum.reduce(fabrics, Map.new(), fn fabric, claims ->
-            Rectangle.coordinates(fabric.dimensions)
-            |> Enum.reduce(claims, fn ij, acc ->
-                Map.update(acc, ij, [fabric.id], fn ids -> [fabric.id | ids] end)
-            end)
-        end)
-
-        Map.to_list(claims) |> Enum.filter(fn {ij, ids} -> length(ids) > 1 end) |> Enum.count()
+        overlappingClaims(fabrics)
+        |> Enum.count
     end
 
-    defp solveSecondPart(_fabrics) do
+    defp solveSecondPart(fabrics) do
+        ids = Enum.map(fabrics, &(&1.id)) 
+        |> Enum.into(MapSet.new())
+
+        overlappingIds = overlappingClaims(fabrics)
+        |> Enum.flat_map(fn {_, ids} -> ids end)
+        |> Enum.uniq()
+        |> Enum.into(MapSet.new())
+
+        MapSet.difference(ids, overlappingIds) 
+        |> MapSet.to_list
+    end
+
+    defp overlappingClaims(fabrics) do
+        claims(fabrics)
+        |> Map.to_list
+        |> Enum.filter(fn {_, ids} -> length(ids) > 1 end)
+    end
+
+    defp claims(fabrics) do
+        Enum.reduce(fabrics, Map.new(), fn fabric, claims ->
+            claim_map(fabric)
+            |> Map.merge(claims, fn _, m1, m2 -> m1 ++ m2 end)
+        end)
+    end
+
+    defp claim_map(fabric) do
+        Rectangle.coordinates(fabric.dimensions)
+        |> Enum.reduce(Map.new(), fn ij, acc ->
+            Map.update(acc, ij, [fabric.id], fn ids -> [fabric.id | ids] end)
+        end)
     end
 end
 
