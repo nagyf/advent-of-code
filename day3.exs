@@ -14,11 +14,11 @@ defmodule Fabric do
     defstruct id: "", dimensions: %Rectangle{}
 
     def parse(str) do
-        [id, _, xy, wh] = String.split(str, " ", trim: true)
-        [x, y] = String.trim_trailing(xy, ":") |> String.split(",") |> Enum.map(&String.to_integer/1)
-        [width, height] = String.split(wh, "x") |> Enum.map(&String.to_integer/1)
-        dimensions = %Rectangle{x: x, y: y, w: width, h: height}
-        %Fabric{id: id, dimensions: dimensions}
+        [id, x, y, w, h] = Regex.scan(~r{-?\d+}, str) |> List.flatten |> Enum.map(&String.to_integer/1)
+        %Fabric{
+            id: Integer.to_string(id), 
+            dimensions: %Rectangle{x: x, y: y, w: w, h: h}
+        }
     end
 end
 
