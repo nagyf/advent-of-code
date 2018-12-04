@@ -2,8 +2,10 @@ defmodule Day2 do
     def solve(input) do
         ids = input |> String.split()
         
+        IO.puts "Day 2"
         IO.puts "1st solution: #{solve_first_part(ids)}"
         IO.puts "2nd solution: #{solve_second_part(ids)}"
+        IO.puts "------"
     end
 
     def solve_first_part(ids) do
@@ -92,6 +94,3 @@ defmodule Day2 do
         end
     end
 end
-
-Code.require_file("common.ex")
-Common.solve("day2.txt", &Day2.solve/1)

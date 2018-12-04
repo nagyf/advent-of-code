@@ -24,9 +24,11 @@ end
 
 defmodule Day3 do
     def solve(input) do
-        fabrics = String.split(input, ~r{\n}) |> Enum.map(&Fabric.parse/1)        
+        fabrics = String.split(input, ~r{\n}) |> Enum.map(&Fabric.parse/1)
+        IO.puts "Day 3"
         IO.puts "1st solution: #{solveFirstPart(fabrics)}"
         IO.puts "2nd solution: #{solveSecondPart(fabrics)}"
+        IO.puts "------"
     end
 
     defp solveFirstPart(fabrics) do
@@ -67,6 +69,3 @@ defmodule Day3 do
         end)
     end
 end
-
-Code.require_file("common.ex")
-Common.solve("day3.txt", &Day3.solve/1)

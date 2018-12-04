@@ -2,8 +2,10 @@ defmodule Day1 do
     def solve(input) do
         frequencyChanges = String.split(input) |> Enum.map(&String.to_integer/1)
         
+        IO.puts "Day 1"
         IO.puts "1st solution: #{solveFirstPart(frequencyChanges)}"
         IO.puts "2nd solution: #{solveSecondPart(frequencyChanges)}"
+        IO.puts "------"
     end
 
     defp solveFirstPart(frequencyChanges) do
@@ -34,6 +36,3 @@ defmodule Day1 do
         tail ++ [head]
     end
 end
-
-Code.require_file("common.ex")
-Common.solve("day1.txt", &Day1.solve/1)

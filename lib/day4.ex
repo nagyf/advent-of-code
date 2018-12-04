@@ -39,8 +39,10 @@ end
 defmodule Day4 do
     def solve(input) do
         records = String.split(input, ~r{\n}) |> Enum.map(&ShiftRecord.parse/1) |> Enum.sort_by(&(&1.datetime), &(Timex.compare(&1, &2) == -1)) |> ShiftRecord.fill_ids
+        IO.puts "Day 4"
         IO.puts "1st solution: #{solveFirstPart(records)}"
         IO.puts "2nd solution: #{solveSecondPart(records)}"
+        IO.puts "------"
     end
 
     defp solveFirstPart(records) do
