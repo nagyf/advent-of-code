@@ -8,14 +8,34 @@ defmodule Day5 do
     end
 
     defp solveFirstPart(input) when is_list(input) do
-        {result, collapsed_count} = collapse(input)
-        cond do
-            collapsed_count > 0 -> solveFirstPart(result)
-            true -> length(result)
-        end
+        collapse_polymers(input)
     end
 
-    defp solveSecondPart(_input) do
+    defp solveSecondPart(input) when is_list(input) do
+        units(input)
+        |> Enum.reduce(MapSet.new, fn {a, aa}, acc ->
+            length =
+                input
+                |> Enum.filter(fn x -> x != a && x != aa end)
+                |> collapse_polymers
+            MapSet.put(acc, length)
+        end)
+        |> Enum.min
+    end
+
+    defp units(input) when is_list(input) do
+        input
+        |> Enum.map(&String.upcase/1)
+        |> Enum.uniq
+        |> Enum.map(fn a -> {String.downcase(a), a} end)
+    end
+
+    defp collapse_polymers(input) do
+        {result, collapsed_count} = collapse(input)
+        cond do
+            collapsed_count > 0 -> collapse_polymers(result)
+            true -> length(result)
+        end
     end
 
     defp collapse(list) when is_list(list), do: collapse(list, {[], 0})
@@ -25,6 +45,7 @@ defmodule Day5 do
         b = hd(ss)
         cond do
             is_collapsible(a, b) -> collapse(tl(ss), {result, collapsed + 2})
+            length(result) > 0 && is_collapsible(a, hd(result)) -> collapse(ss, {tl(result), collapsed + 1})
             true -> collapse(ss, {[a|result], collapsed})
         end
     end
