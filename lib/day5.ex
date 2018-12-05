@@ -14,12 +14,12 @@ defmodule Day5 do
     defp solveSecondPart(input) when is_list(input) do
         units(input)
         |> Enum.reduce(MapSet.new, fn {a, aa}, acc ->
-            length =
-                input
-                |> Enum.filter(fn x -> x != a && x != aa end)
-                |> collapse_polymers
-            MapSet.put(acc, length)
-        end)
+                length =
+                    input
+                    |> Enum.filter(fn x -> x != a && x != aa end)
+                    |> collapse_polymers
+                MapSet.put(acc, length)
+            end)
         |> Enum.min
     end
 
@@ -30,23 +30,22 @@ defmodule Day5 do
         |> Enum.map(fn a -> {String.downcase(a), a} end)
     end
 
-    defp collapse_polymers(input) do
-        {result, collapsed_count} = collapse(input)
-        cond do
-            collapsed_count > 0 -> collapse_polymers(result)
-            true -> length(result)
-        end
+    defp collapse_polymers(input) when is_list(input) do
+        collapse(input)
+        |> length
     end
 
-    defp collapse(list) when is_list(list), do: collapse(list, {[], 0})
-    defp collapse([], {r, c}), do: {Enum.reverse(r), c}
-    defp collapse([a], {r, c}), do: {Enum.reverse([a|r]), c}
-    defp collapse([a|ss], {result, collapsed}) do
+    defp collapse(list) when is_list(list), do: collapse(list, [])
+    defp collapse([], r), do: Enum.reverse(r)
+    defp collapse([a], r) do
+        if is_collapsible(a, hd(r)) do collapse([], tl(r)) else collapse([], [a|r]) end
+    end
+    defp collapse([a|ss], result) do
         b = hd(ss)
         cond do
-            is_collapsible(a, b) -> collapse(tl(ss), {result, collapsed + 2})
-            length(result) > 0 && is_collapsible(a, hd(result)) -> collapse(ss, {tl(result), collapsed + 1})
-            true -> collapse(ss, {[a|result], collapsed})
+            is_collapsible(a, b) -> collapse(tl(ss), result)
+            length(result) > 0 && is_collapsible(a, hd(result)) -> collapse(ss, tl(result))
+            true -> collapse(ss, [a|result])
         end
     end
 
