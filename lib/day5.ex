@@ -1,0 +1,35 @@
+defmodule Day5 do
+    def solve(input) do
+        splitted = String.split(input, "", trim: true)
+        IO.puts "Day 5"
+        IO.puts "1st solution: #{solveFirstPart(splitted)}"
+        IO.puts "2nd solution: #{solveSecondPart(splitted)}"
+        IO.puts "------"
+    end
+
+    defp solveFirstPart(input) when is_list(input) do
+        {result, collapsed_count} = collapse(input)
+        cond do
+            collapsed_count > 0 -> solveFirstPart(result)
+            true -> length(result)
+        end
+    end
+
+    defp solveSecondPart(_input) do
+    end
+
+    defp collapse(list) when is_list(list), do: collapse(list, {[], 0})
+    defp collapse([], {r, c}), do: {Enum.reverse(r), c}
+    defp collapse([a], {r, c}), do: {Enum.reverse([a|r]), c}
+    defp collapse([a|ss], {result, collapsed}) do
+        b = hd(ss)
+        cond do
+            is_collapsible(a, b) -> collapse(tl(ss), {result, collapsed + 2})
+            true -> collapse(ss, {[a|result], collapsed})
+        end
+    end
+
+    defp is_collapsible(a, b) do
+        String.upcase(a) == String.upcase(b) && a != b
+    end
+end
