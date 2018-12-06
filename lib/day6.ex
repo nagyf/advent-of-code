@@ -2,8 +2,8 @@ defmodule Day6 do
     def solve(input) do
         splitted = String.split(input, "\n", trim: true) 
         |> Enum.map(fn str -> 
-            [x, y] = String.split(str, ", ") 
-            {String.to_integer(x), String.to_integer(y)}
+            [x, y] = String.split(str, ", ") |> Enum.map(&String.to_integer/1)
+            {x, y}
         end)
 
         IO.puts "Day 6"
@@ -14,28 +14,26 @@ defmodule Day6 do
 
     defp solveFirstPart(input) do
         boundary = boundary_coords(input)
-        owners = coordinate_ownership(input)
+        ownership = coordinate_ownership(input)
 
         coord = Enum.filter(input, fn xy ->
-            owned = owners[xy]
+            # Filter out coordinates that own infinite size areas
+            owned = ownership[xy]
             MapSet.size(MapSet.intersection(owned, boundary)) == 0
         end)
-        |> Enum.max_by(fn xy -> MapSet.size(owners[xy]) end)
+        |> Enum.max_by(fn xy -> MapSet.size(ownership[xy]) end)
 
-        MapSet.size(owners[coord])
+        MapSet.size(ownership[coord])
     end
 
     defp solveSecondPart(_input) do
     end
 
     defp coordinate_ownership(input) do
-        coords = plane_coords(input)
-        Enum.reduce(coords, Map.new(), fn xy, acc -> 
-            distances = Enum.map(input, fn ab -> 
-                {ab, manhatten_distance(xy, ab)}
-            end)
-
-            min_distance = Enum.map(distances, fn {_, dist} -> dist end) |> Enum.min
+        plane_coords(input)
+        |> Enum.reduce(Map.new(), fn xy, acc -> 
+            distances = Enum.map(input, &({&1, manhatten_distance(&1, xy)}))
+            {_, min_distance} = Enum.min_by(distances, fn {_, dist} -> dist end)
 
             owners = distances |> Enum.filter(fn {_, dist} -> dist == min_distance end) |> Enum.map(fn {ab, _} -> ab end)
             if length(owners) == 1 do
