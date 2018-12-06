@@ -26,7 +26,16 @@ defmodule Day6 do
         MapSet.size(ownership[coord])
     end
 
-    defp solveSecondPart(_input) do
+    defp solveSecondPart(input) do
+        plane_coords(input)
+        |> Enum.reduce(0, fn xy, acc -> 
+            sum_distances = Enum.map(input, &(manhatten_distance(&1, xy))) |> Enum.sum
+            if sum_distances < 10_000 do
+                acc + 1
+            else 
+                acc
+            end
+        end)
     end
 
     defp coordinate_ownership(input) do
