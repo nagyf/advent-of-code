@@ -13,7 +13,10 @@ defmodule Day7 do
         |> topological_sort
     end
 
-    defp solveSecondPart(_input) do
+    defp solveSecondPart(input) do
+        parse_edges(input)
+        |> build_graph
+        |> solve(5)
     end
 
     defp parse_edges(input) do
@@ -40,6 +43,19 @@ defmodule Day7 do
         |> remove_node(n)
         |> remove_edge(n)
         topological_sort(updated_graph, [n | result], zero_in_degree_nodes(updated_graph))
+    end
+
+    defp solve(graph, num_workers) do
+        costs = task_costs(graph)
+        solve(graph)
+    end
+
+    defp task_costs(graph) do
+        graph 
+        |> Map.keys
+        |> Enum.sort
+        |> Enum.with_index
+        |> Enum.reduce(Map.new, fn {k, v}, acc -> Map.put(acc, k, v + 61) end)
     end
 
     defp remove_node(graph, node) do

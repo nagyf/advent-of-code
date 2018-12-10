@@ -6,5 +6,7 @@ defmodule AdventOfCode do
         Common.solve("lib/day4.txt", &Day4.solve/1)
         Common.solve("lib/day5.txt", &Day5.solve/1)
         Common.solve("lib/day6.txt", &Day6.solve/1)
+        Common.solve("lib/day7.txt", &Day7.solve/1)
+        Common.solve("lib/day8.txt", &Day8.solve/1)
     end
 end
